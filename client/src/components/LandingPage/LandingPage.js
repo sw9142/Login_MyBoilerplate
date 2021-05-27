@@ -1,6 +1,15 @@
 import React from "react";
+import Axios from "axios";
 
 function LandingPage() {
+  const onLogoutHandler = () => {
+    Axios.post("/api/user/logout").then((res) => {
+      if (res.data.success) {
+      } else {
+        console.log("failed in logout");
+      }
+    });
+  };
   return (
     <div
       style={{
@@ -11,9 +20,9 @@ function LandingPage() {
         height: "100vh",
       }}
     >
-      <h2>시작 페이지</h2>
+      <h2>Welcome!</h2>
 
-      <button>로그아웃</button>
+      <button onClick={onLogoutHandler}>Log out</button>
     </div>
   );
 }

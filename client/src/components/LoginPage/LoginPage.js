@@ -19,8 +19,8 @@ function LoginPage(props) {
     };
 
     Axios.post("/api/user/login", data).then((res) => {
-      if (res.data.success) {
-        console.log("login success");
+      if (res.data.loginSuccess) {
+        console.log("login success userID:", res.data.userId);
         props.history.push("/");
       } else {
         console.log("error!");
