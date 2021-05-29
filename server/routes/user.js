@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { User } = require("../models/User");
+const { auth } = require("../middleware/auth");
 
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
+
+  console.log("i am in login url");
 
   User.findOne({ email: email }).then((user) => {
     if (user) {
@@ -66,8 +69,13 @@ router.post("/register", (req, res) => {
   });
 });
 
-router.post("/logout", (req, res) => {
-  console.log("req.user?: ", req.user);
+router.post("/logout", auth, (req, res) => {
+  User.findOneAndUpdate({ _id: req.user._id }, { token: "" }, (err, user) => {
+    if (err) return res.json({ success: false, err });
+    return res.status(200).send({
+      success: true,
+    });
+  });
 });
 
 module.exports = router;

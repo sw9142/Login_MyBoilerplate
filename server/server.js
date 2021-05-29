@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, (err) => {
   if (err) console.log("err", err);
   console.log("successfully connected to port ", PORT);

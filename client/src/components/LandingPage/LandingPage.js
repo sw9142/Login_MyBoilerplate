@@ -1,10 +1,12 @@
 import React from "react";
 import Axios from "axios";
+import { Typography } from "@material-ui/core";
 
-function LandingPage() {
+function LandingPage(props) {
   const onLogoutHandler = () => {
     Axios.post("/api/user/logout").then((res) => {
       if (res.data.success) {
+        props.history.push("/login");
       } else {
         console.log("failed in logout");
       }
@@ -20,7 +22,7 @@ function LandingPage() {
         height: "100vh",
       }}
     >
-      <h2>Welcome!</h2>
+      <Typography variant={"h2"}>Welcome!</Typography>
 
       <button onClick={onLogoutHandler}>Log out</button>
     </div>
