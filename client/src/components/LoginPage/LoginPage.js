@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Axios from "axios";
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,8 +13,12 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { useDispatch } from "react-redux";
+import { userLogin } from "../../_actions/user_action";
 
 function LoginPage(props) {
+  const Dispatch = useDispatch();
+
   function Copyright() {
     return (
       <Typography variant="body2" color="textSecondary" align="center">
@@ -64,13 +68,13 @@ function LoginPage(props) {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
 
-  const emailHandler = (e) => {
+  const OnemailHandler = (e) => {
     setEmail(e.target.value);
   };
-  const passwordHandler = (e) => {
+  const OnpasswordHandler = (e) => {
     setPassword(e.target.value);
   };
-  const submitHandler = (e) => {
+  const OnsubmitHandler = (e) => {
     e.preventDefault();
 
     const data = {
@@ -78,16 +82,15 @@ function LoginPage(props) {
       password: Password,
     };
 
-    Axios.post("/api/user/login", data).then((res) => {
-      if (res.data.loginSuccess) {
-        console.log("login success userID:", res.data.userId);
+    Dispatch(userLogin(data)).then((res) => {
+      if (res.payload.loginSuccess) {
+        console.log("res.payload.loginSuccess?: ", res.payload.loginSuccess);
         props.history.push("/");
       } else {
-        console.log("error!");
+        alert("err!");
       }
     });
   };
-
   const classes = useStyles();
   return (
     <Grid container component="main" className={classes.root}>
@@ -110,7 +113,7 @@ function LoginPage(props) {
               id="email"
               label="Email Address"
               name="email"
-              onChange={emailHandler}
+              onChange={OnemailHandler}
               autoComplete="email"
               autoFocus
             />
@@ -123,7 +126,7 @@ function LoginPage(props) {
               label="Password"
               type="password"
               id="password"
-              onChange={passwordHandler}
+              onChange={OnpasswordHandler}
               autoComplete="current-password"
             />
             <FormControlLabel
@@ -135,7 +138,7 @@ function LoginPage(props) {
               fullWidth
               variant="contained"
               color="primary"
-              onClick={submitHandler}
+              onClick={OnsubmitHandler}
               className={classes.submit}
             >
               Sign In
@@ -159,27 +162,6 @@ function LoginPage(props) {
         </div>
       </Grid>
     </Grid>
-
-    // <div>
-    //   <h1>Login Page</h1>
-    //   <form>
-    //     <input
-    //       type="text"
-    //       name="email"
-    //       onChange={emailHandler}
-    //       value={Email}
-    //       placeholder="email"
-    //     />
-    //     <input
-    //       type="text"
-    //       name="password"
-    //       onChange={passwordHandler}
-    //       value={Password}
-    //       placeholder="password"
-    //     />
-    //     <button onClick={submitHandler}>Submit</button>
-    //   </form>
-    // </div>
   );
 }
 

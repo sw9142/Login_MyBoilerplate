@@ -1,6 +1,3 @@
-Hello, My Friends  
-Thank you for having interest in this repository :)
-
 # My BoilerPlate (Sign up/Login/Logout)
 
 # What I used?

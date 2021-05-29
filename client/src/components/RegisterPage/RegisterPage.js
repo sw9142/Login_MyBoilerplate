@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,6 +12,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { userRegister } from "../../_actions/user_action";
+import { useDispatch } from "react-redux";
 
 function Copyright() {
   return (
@@ -48,13 +49,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function RegisterPage(props) {
+  const Dispatch = useDispatch();
+
   const classes = useStyles();
 
   const [Email, setEmail] = useState("");
   const [Name, setName] = useState("");
   const [Password, setPassword] = useState("");
-  // const [ConfirmPassword, setConfirmPassword] = useState("");
-  // const [Meg, setMeg] = useState("");
 
   const onEmailHandler = (e) => {
     setEmail(e.target.value);
@@ -65,37 +66,24 @@ function RegisterPage(props) {
   const onPasswordHandler = (e) => {
     setPassword(e.target.value);
   };
-  // const onConfirmPasswordHandler = (e) => {
-  //   setConfirmPassword(e.target.value);
-  // };
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    // if (Password !== ConfirmPassword) {
-    //   setMeg("Password and Confirm Password does not match!");
-    // } else if (Password.length < 5) {
-    //   setMeg("password must be more than 5 digits");
-    // } else if (Name.length > 50) {
-    //   setMeg("name should not be more than 50 digits");
-    // } else {
-    //   setMeg("");
-    //
 
     const data = {
       Email,
       Name,
       Password,
     };
-    Axios.post("/api/user/register", data).then((res) => {
-      if (res.data.duplicate) {
-        // setMeg("You already have an account please sign in");
+
+    Dispatch(userRegister(data)).then((res) => {
+      console.log("res in register page: ", res);
+      if (res.payload.success) {
+        props.history.push("/login");
+      } else if (res.payload.duplicate) {
+        alert("Email Already In Use! please Login");
       } else {
-        if (res.data.success) {
-          console.log("register success");
-          props.history.push("/login");
-        } else {
-          console.log("failed to sign up: ", res.data, " or ", res.data.err);
-        }
+        alert("err!");
       }
     });
   };
@@ -185,46 +173,3 @@ function RegisterPage(props) {
 }
 
 export default RegisterPage;
-
-// <div>
-//   <h1 style={{ width: "100%", textAlign: "center" }}>Registration Page</h1>
-//   <div
-//     style={{
-//       display: "flex",
-//       justifyContent: "center",
-//       alignItems: "center",
-//       width: "100%",
-//       height: "100vh",
-//     }}
-//   >
-//     <div>
-//       <p style={{ color: "red", fontSize: "0.9rem" }}> {Meg}</p>
-//     </div>
-
-//     <form style={{ display: "flex", flexDirection: "column" }}>
-//       <label>Email</label>
-//       <input type="email" value={Email} onChange={onEmailHandler} />
-
-//       <label>First Name</label>
-//       <input type="text" value={Name} onChange={onNameHandler} />
-
-//       <label>Password</label>
-//       <input
-//         type="password"
-//         value={Password}
-//         onChange={onPasswordHandler}
-//       />
-
-//       <label>Confirm Password</label>
-//       <input
-//         type="password"
-//         value={ConfirmPassword}
-//         onChange={onConfirmPasswordHandler}
-//       />
-//       <br />
-//       <button type="submit" onClick={onSubmitHandler}>
-//         Sign Up
-//       </button>
-//     </form>
-//   </div>
-// </div>

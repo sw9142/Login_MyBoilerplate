@@ -6,17 +6,13 @@ const { auth } = require("../middleware/auth");
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  console.log("i am in login url");
-
   User.findOne({ email: email }).then((user) => {
     if (user) {
-      console.log("we found matched email from db!");
       //check the password
       user.comparePassword(password, (err, isMatch) => {
         if (err)
           return res.json({ loginSuccess: false, message: "found err", err });
         if (isMatch) {
-          //비밀번호 까지 맞다면 토큰을 생성하기.
           console.log("password is correct!");
           user.generateToken((err, user) => {
             if (err)
@@ -26,7 +22,6 @@ router.post("/login", (req, res) => {
                 err,
               });
             if (user) {
-              // 토큰을 저장한다.  어디에 ?  쿠키 , 로컳스토리지
               res
                 .cookie("x_auth", user.token)
                 .status(200)
@@ -74,6 +69,7 @@ router.post("/logout", auth, (req, res) => {
     if (err) return res.json({ success: false, err });
     return res.status(200).send({
       success: true,
+      loginSuccess: false,
     });
   });
 });
